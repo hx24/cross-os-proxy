@@ -1,0 +1,28 @@
+{
+  "name": "cross-os-proxy",
+  "version": "1.0.0",
+  "description": "manage system proxy settings, support macOS & windows",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "proxy",
+    "macOS",
+    "networksetup",
+    "osx",
+    "os x",
+    "windows",
+    "network"
+  ],
+  "author": {
+    "name": "hx24",
+    "email": "83036406@qq.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "execa": "5.1.1",
+    "network": "0.5.0",
+    "pify": "5.0.0"
+  }
+}
