@@ -1,18 +1,26 @@
-const fs = require("fs")
-const path = require('path')
 const platform = process.platform.toLowerCase()
 const platformsPath = "./platforms"
+const currentOsProxy = require(`${platformsPath}/${platform}`)
 
-const plats = fs.readdirSync(path.resolve(__dirname, platformsPath))
-const all = {}
-plats.forEach((plat) => {
-  all[plat] = require(`${platformsPath}/${plat}`)
-})
+/**
+ * set system proxy, includes http & https
+ * @param {string} host proxy host eg: '127.0.0.1'
+ * @param {*} port eg: 8001
+ * @returns Promise
+ */
+async function setProxy(host, port) {
+  return currentOsProxy.setProxy(host, port)
+}
 
-const currentOsProxyPath = `${platformsPath}/${platform}`
-const support = fs.existsSync(path.resolve(__dirname, currentOsProxyPath))
+/**
+ * close system proxy, includes http & https
+ * @returns Promise
+ */
+async function closeProxy() {
+  return currentOsProxy.closeProxy()
+}
 
 module.exports = {
-  ...all,
-  ...(support ? require(currentOsProxyPath) : {})
+  setProxy,
+  closeProxy
 }

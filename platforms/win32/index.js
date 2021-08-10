@@ -60,9 +60,5 @@ const notSupport = () => {
 
 module.exports = {
   setProxy,
-  closeProxy,
-  setHttpProxy: notSupport,
-  setHttpsProxy: notSupport,
-  closeHttpProxy: notSupport,
-  closeHttpsProxy: notSupport
+  closeProxy
 }
