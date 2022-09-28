@@ -14,8 +14,6 @@ while read -r line; do
         rc="$?"
         if [ "$rc" -eq 0 ]; then
             currentservice="$sname"
-            currentdevice="$sdev"
-            currentmac=$(echo "$ifout" | awk '/ether/{print $2}')
 
             # may have multiple active devices, so echo it here
             echo "$currentservice"
