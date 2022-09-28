@@ -1,6 +1,6 @@
 {
   "name": "cross-os-proxy",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "configure system proxy settings, support macOS & windows",
   "homepage": "https://github.com/hx24/cross-os-proxy",
   "main": "index.js",
