@@ -3,8 +3,8 @@ const path = require("path")
 
 /**
  * start http & https proxy
- * @param {string} host host
- * @param {number} port port
+ * @param {string} host proxy host eg: 127.0.0.1
+ * @param {number} port port eg: 8001
  * @returns Promise<string>
  */
 function setProxy(host, port) {

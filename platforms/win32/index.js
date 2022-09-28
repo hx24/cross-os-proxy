@@ -1,24 +1,11 @@
-const regedit = require('regedit')
+const regedit = require('regedit').promisified
 
 const internetSettingsPath = 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Internet Settings'
-
-const editRegPromisify = (valuesToPut) => {
-  return new Promise((resolve, reject) => {
-    regedit.putValue(valuesToPut, function (err) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve()
-      }
-    })
-  })
-}
-
 
 /**
  * set system proxy, includes http & https
  * @param {string} host proxy host eg: 127.0.0.1
- * @param {*} port 
+ * @param {number} port port eg: 8001
  * @returns Promise
  */
 async function setProxy(host, port) {
@@ -34,7 +21,7 @@ async function setProxy(host, port) {
       }
     }
   }
-  return editRegPromisify(valuesToPut)
+  return regedit.putValue(valuesToPut)
 }
 
 /**
@@ -50,13 +37,8 @@ async function closeProxy() {
       }
     }
   }
-  return editRegPromisify(valuesToPut)
+  return regedit.putValue(valuesToPut)
 }
-
-const notSupport = () => {
-  return Promise.reject('not support yet in windows, you can only set http & https together.')
-}
-
 
 module.exports = {
   setProxy,
