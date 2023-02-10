@@ -1,5 +1,18 @@
-const { execFile } = require("child_process")
-const path = require("path")
+const { execFile } = require('child_process')
+const path = require('path')
+
+function getNetworkService() {
+  const shellPath = path.resolve(__dirname, './getNetworkService.sh')
+  return new Promise((resolve, reject) => {
+    execFile(shellPath, null, (error, stdout, stderr) => {
+      if (error) {
+        resolve('')
+      } else {
+        resolve(stdout.trim())
+      }
+    })
+  })
+}
 
 /**
  * start http & https proxy
@@ -7,17 +20,25 @@ const path = require("path")
  * @param {number} port port eg: 8001
  * @returns Promise<string>
  */
-function setProxy(host, port) {
-  const proxyOnShellPath = path.resolve(__dirname, "./proxyon.sh")
+async function setProxy(host, port) {
+  const proxyOnShellPath = path.resolve(__dirname, './proxyOn.sh')
+  const networkService = await getNetworkService()
+  if (!networkService) {
+    throw new Error('networkService is empty')
+  }
   return new Promise((resolve, reject) => {
-    execFile(proxyOnShellPath, [host, port], (error, stdout, stderr) => {
-      if (error) {
-        reject(error)
-        throw error
-      } else {
-        resolve(stdout)
-      }
-    })
+    execFile(
+      proxyOnShellPath,
+      [host, port, networkService],
+      (error, stdout, stderr) => {
+        if (error) {
+          reject(error)
+          throw error
+        } else {
+          resolve(stdout)
+        }
+      },
+    )
   })
 }
 
@@ -25,10 +46,14 @@ function setProxy(host, port) {
  * close http & https proxy
  * @returns Promise<string>
  */
-function closeProxy() {
-  const proxyOffShellPath = path.resolve(__dirname, "./proxyoff.sh")
+async function closeProxy() {
+  const proxyOffShellPath = path.resolve(__dirname, './proxyOff.sh')
+  const networkService = await getNetworkService()
+  if (!networkService) {
+    throw new Error('networkService is empty')
+  }
   return new Promise((resolve, reject) => {
-    execFile(proxyOffShellPath, [], (error, stdout, stderr) => {
+    execFile(proxyOffShellPath, [networkService], (error, stdout, stderr) => {
       if (error) {
         reject(error)
         throw error
@@ -39,7 +64,39 @@ function closeProxy() {
   })
 }
 
+async function getStatus() {
+  const proxyStatusShellPath = path.resolve(__dirname, './proxyStatus.sh')
+  const networkService = await getNetworkService()
+  if (!networkService) {
+    throw new Error('networkService is empty')
+  }
+  return new Promise((resolve, reject) => {
+    execFile(
+      proxyStatusShellPath,
+      [networkService],
+      (error, stdout, stderr) => {
+        if (error) {
+          reject(error)
+          throw error
+        } else {
+          let enabled = stdout.match(/Enabled: (\w+)/)[1]
+          let server = stdout.match(/Server: ([\d\.]+)/)?.[1]
+          let port = stdout.match(/Port: (\d+)/)[1]
+          console.log(stdout)
+          console.log({
+            enabled: enabled === 'Yes',
+            server,
+            port: Number(port) ? Number(port) : undefined,
+          })
+          resolve(stdout)
+        }
+      },
+    )
+  })
+}
+
 module.exports = {
   setProxy,
-  closeProxy
+  closeProxy,
+  getStatus
 }
