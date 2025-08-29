@@ -7,7 +7,10 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git@github.com:hx24/cross-os-proxy.git"
+    "url": "https://github.com/hx24/cross-os-proxy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hx24/cross-os-proxy/issues"
   },
   "keywords": [
     "proxy",
