@@ -18,9 +18,11 @@ function getNetworkService() {
  * start http & https proxy
  * @param {string} host proxy host eg: 127.0.0.1
  * @param {number} port port eg: 8001
+ * @param {string} [username] eg: username
+ * @param {string} [password] eg: password
  * @returns Promise<string>
  */
-async function setProxy(host, port) {
+async function setProxy(host, port, username = "", password = "") {
   const proxyOnShellPath = path.resolve(__dirname, './proxyOn.sh')
   const networkService = await getNetworkService()
   if (!networkService) {
@@ -29,7 +31,7 @@ async function setProxy(host, port) {
   return new Promise((resolve, reject) => {
     execFile(
       proxyOnShellPath,
-      [host, port, networkService],
+      [networkService, host, port, username, password],
       (error, stdout, stderr) => {
         if (error) {
           reject(error)

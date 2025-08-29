@@ -1,15 +1,25 @@
 #!/bin/bash
 #
 
-echo $1
-echo $2
-echo $3
+networkService=$1
+host=$2
+port=$3 
+username=$4
+password=$5
 
-if  [  "$2"  !=  ""  ];  then
-    networksetup -setwebproxy $3 $1 $2    #设置Web HTTP代理
-    networksetup -setsecurewebproxy $3 $1 $2    #设置Web HTTPS代理
+if  [  "$networkService"  !=  ""  ];  then
+    if  [  "$username"  !=  ""  ];  then
+        networksetup -setwebproxystate $networkService off    #关闭Web HTTP代理
+        networksetup -setsecurewebproxystate $networkService off   #关闭Web HTTPS代理
+        
+        networksetup -setwebproxy $networkService $host $port on $username $password  #设置Web HTTP代理
+        networksetup -setsecurewebproxy $networkService $host $port on $username $password  #设置Web HTTPS代理
+    else
+        networksetup -setwebproxy $networkService $host $port  #设置Web HTTP代理
+        networksetup -setsecurewebproxy $networkService $host $port    #设置Web HTTPS代理
+    fi
 fi
 
-networksetup -setwebproxystate $3 on    #打开Web HTTP代理
-networksetup -setsecurewebproxystate $3 on   #打开Web HTTPS代理
+networksetup -setwebproxystate $networkService on    #打开Web HTTP代理
+networksetup -setsecurewebproxystate $networkService on   #打开Web HTTPS代理
 echo  Done
